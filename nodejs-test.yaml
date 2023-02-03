@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nodejs-app
+  label: test
+spec:
+  selector:
+    matchLabels:
+      app: nodejs-app
+  replicas: 2
+  template:
+    metadata: 
+      labels: 
+        app: nodejs-app
+    spec: 
+      containers:
+      -  name: nodejs
+         image: app:tag
+         ports:
+         - containerPort: 8080
+
+
+# nodejs-service
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: myapp
+spec:
+  selector:
+    app: nodejs-app
+  ports:
+  - port: 80
+    targetPort:  8080
+
+    nodeport:
+
+
+
+
+# Docker file
+
+FROM node:tag
+LABEL key="value"
+WORKDIR /usr/src/app
+COPY  package*.json ./
+RUN npm install
+EXPOSE 8080
+CMD ["node", "server.js"]
+
+
+
+
+
+
+
